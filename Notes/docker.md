@@ -1,3 +1,5 @@
+<img src="https://th.bing.com/th/id/R.f5f31dde1e196d8a9be784f3ba95ec42?rik=QNTo%2fA3NdcoeHA&pid=ImgRaw&r=0" />
+
 # Docker CLI Commands
 
 ## 1. Pulling Images
