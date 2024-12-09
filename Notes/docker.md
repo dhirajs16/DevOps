@@ -293,3 +293,56 @@ Best practices:
 ### Q.1. Why docker containers are light weight?
 
 It is so because docker container don’t have their own dedicated complete OS (like VMs) they are just the collection of source code, libraries and system dependencies. In fact it uses the base OS of the host over which the container is running.
+
+<hr>
+
+[Video 2](https://www.youtube.com/watch?v=wodLpta-hoQ&list=PLdpzxOOAlwvLjb0vTD9BXLOwwLD_GWCmC&index=2)
+
+### **Container Basics**
+
+- **Shared Kernel**: Docker containers share the host operating system's kernel, which allows them to run lightweight and efficiently. Unlike virtual machines (VMs) that require their own full OS, containers operate directly on the host's kernel, making them faster and less resource-intensive.
+- **Limited OS Files**: Containers do not include a complete operating system; instead, they contain only the necessary binaries and libraries required for the applications to run. This means that while they may be based on OS images (like Ubuntu or Alpine), they do not replicate the entire OS structure. The kernel is shared among all containers running on the same host.
+    - **Some of the necessary binaries and libraries files which they have on their own:**
+    
+    ```
+    /bin: contains binary executable files, such as the ls, cp, and ps commands.
+    
+    /sbin: contains system binary executable files, such as the init and shutdown commands.
+    
+    /etc: contains configuration files for various system services.
+    
+    /lib: contains library files that are used by the binary executables.
+    
+    /usr: contains user-related files and utilities, such as applications, libraries, and documentation.
+    
+    /var: contains variable data, such as log files, spool files, and temporary files.
+    
+    /root: is the home directory of the root user.
+    ```
+    
+    - **Files and Folders that containers use from host operating system:**
+    
+    ```
+    The host's file system: Docker containers can access the host file system using bind mounts, which allow the container to read and write files in the host file system.
+    
+    Networking stack: The host's networking stack is used to provide network connectivity to the container. Docker containers can be connected to the host's network directly or through a virtual network.
+    
+    System calls: The host's kernel handles system calls from the container, which is how the container accesses the host's resources, such as CPU, memory, and I/O.
+    
+    Namespaces: Docker containers use Linux namespaces to create isolated environments for the container's processes. Namespaces provide isolation for resources such as the file system, process ID, and network.
+    
+    Control groups (cgroups): Docker containers use cgroups to limit and control the amount of resources, such as CPU, memory, and I/O, that a container can access.
+    
+    ```
+    
+    - These set of files are collectively needed for the execution of containers. The reason they are used like this to maintain isolation.
+
+### **Security and Isolation**
+
+- **Isolation Mechanisms**: To maintain security, Docker employs several isolation techniques, including Linux namespaces and cgroups. These ensure that processes in one container cannot see or interfere with processes in another container or the host. Each container operates in its own isolated environment, which is critical for security.
+- **Vulnerability Concerns**: Your concern about security is valid. If one container is compromised, it could potentially affect others since they share the same kernel. This is why Docker implements various security measures, such as enhanced container isolation features that map container users to unprivileged users on the host, limiting what a compromised container can access.
+- **Best Practices**: To enhance security further, it is recommended to run containers with the least privileges necessary and to limit their capabilities. This practice minimizes the risk of one container affecting others or accessing sensitive data on the host[7][8].
+
+### **Conclusion**
+
+In summary, your understanding captures the essence of how Docker containers operate with respect to OS files and security. They leverage the host's kernel while maintaining a level of isolation that is crucial for running multiple applications securely. The architectural design of Docker allows for efficient resource utilization while addressing potential security vulnerabilities through various isolation techniques.
