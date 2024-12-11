@@ -294,6 +294,8 @@ Best practices:
 
 It is so because docker container don’t have their own dedicated complete OS (like VMs) they are just the collection of source code, libraries and system dependencies. In fact it uses the base OS of the host over which the container is running.
 
+<img src="https://user-images.githubusercontent.com/43399466/217262726-7cabcb5b-074d-45cc-950e-84f7119e7162.png" />
+
 <hr>
 
 [Video 2](https://www.youtube.com/watch?v=wodLpta-hoQ&list=PLdpzxOOAlwvLjb0vTD9BXLOwwLD_GWCmC&index=2)
@@ -343,6 +345,64 @@ It is so because docker container don’t have their own dedicated complete OS (
 - **Vulnerability Concerns**: Your concern about security is valid. If one container is compromised, it could potentially affect others since they share the same kernel. This is why Docker implements various security measures, such as enhanced container isolation features that map container users to unprivileged users on the host, limiting what a compromised container can access.
 - **Best Practices**: To enhance security further, it is recommended to run containers with the least privileges necessary and to limit their capabilities. This practice minimizes the risk of one container affecting others or accessing sensitive data on the host[7][8].
 
-### **Conclusion**
+## **Architecture of Docker**
 
-In summary, your understanding captures the essence of how Docker containers operate with respect to OS files and security. They leverage the host's kernel while maintaining a level of isolation that is crucial for running multiple applications securely. The architectural design of Docker allows for efficient resource utilization while addressing potential security vulnerabilities through various isolation techniques.
+<img src="https://user-images.githubusercontent.com/43399466/217507877-212d3a60-143a-4a1d-ab79-4bb615cb4622.png" />
+
+
+
+### 1. **Docker Client**
+
+This is the **command-line interface** where you type `docker` commands. It communicates with the Docker Engine using the Docker API.
+
+### 2. **Docker Engine**
+
+The heart of Docker, which consists of two main components:
+
+- **Docker Daemon (dockerd)**: Runs on the host machine, managing Docker objects like images, containers, networks, and volumes. It is the one who run the commands coming from the Docker Client.
+- **REST API**: Used by the Docker Client to interact with the Docker Daemon.
+
+### 3. **Docker Images**
+
+These are read-only templates used to create containers. Think of them as blueprints of your application that include everything needed to run it: code, libraries, and dependencies.
+
+### 4. **Docker Containers**
+
+Containers are lightweight, portable, and isolated environments where your applications run. They are created from Docker images and can be run, started, stopped, moved, and deleted.
+
+### 5. **Docker Registries**
+
+These are storage and distribution systems for Docker images. The most well-known public registry is Docker Hub, but you can also set up your own private registry.
+
+### Summary
+
+1. **Docker Client**: Your interface to interact with Docker.
+2. **Docker Engine**: Runs and manages Docker components.
+3. **Docker Images**: Blueprints for your application.
+4. **Docker Containers**: The running instances of your images.
+5. **Docker Registries**: Where you store and share your images.
+
+In essence, Docker streamlines development and deployment by ensuring your application runs the same way everywhere—whether on your local machine or in the cloud.
+## Workflow
+
+### Dockerfile:
+
+- **Role**: A script with instructions to set up the environment, copy files, install dependencies, and specify the command to run when the container starts.
+- **Purpose**: Defines how to build a Docker image.
+
+### Docker Client (CLI):
+
+- **Role**: The command-line tool you use to interact with Docker.
+- **Tasks**:
+    - **Building Image**: Uses `docker build` to create an image from a Dockerfile.
+    - **Pulling Image**: Uses `docker pull` to download images from a registry.
+    - **Running Container**: Uses `docker run` to create and start a container from an image.
+
+### Workflow:
+
+1. **Write Dockerfile**: Create a Dockerfile with setup instructions.
+2. **Build Image**: Use the Docker Client to build the image from the Dockerfile.
+3. **Push/Pull Image**: Use the Docker Client to push the image to a registry or pull an image from the registry.
+4. **Run Container**: Use the Docker Client to run the image, creating a container.
+
+So, the Dockerfile lays out the blueprint, while the Docker Client handles the building, pulling, and running processes.
