@@ -406,3 +406,358 @@ In essence, Docker streamlines development and deployment by ensuring your appli
 4. **Run Container**: Use the Docker Client to run the image, creating a container.
 
 So, the Dockerfile lays out the blueprint, while the Docker Client handles the building, pulling, and running processes.
+
+<hr>
+
+[Video 3](https://www.youtube.com/watch?v=3IAvr_O6vao&list=PLdpzxOOAlwvLjb0vTD9BXLOwwLD_GWCmC&index=3)
+
+## About Dockerfile
+
+```docker
+# Use Ubuntu as the base image
+FROM ubuntu:20.04
+
+# Install Python and other dependencies
+RUN apt-get update && apt-get install -y python3 python3-pip
+
+# Set environment variables
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
+
+# Set the working directory
+WORKDIR /app
+
+# Copy requirements file and install dependencies
+COPY requirements.txt /app/
+RUN pip3 install --upgrade pip
+RUN pip3 install -r requirements.txt
+
+# Copy the project files
+COPY . /app/
+
+# Expose port 8000
+EXPOSE 8000
+
+# Run the Django development server
+CMD ["python3", "manage.py", "runserver", "0.0.0.0:8000"]
+
+```
+
+### Parent Image
+
+A parent image is an essential component of a Dockerfile. The parent image provides the base operating system and environment that your container will run in. It serves as the starting point for building your Docker image, allowing you to define the environment, dependencies, and applications your container needs.
+
+### 1. Importance of a Parent Image
+
+- **Consistency**: Ensures a consistent environment across different deployments.
+- **Base Operating System**: Provides the underlying operating system (e.g., Ubuntu, Debian, Alpine) on which your application will run.
+- **Pre-installed Software**: Includes pre-installed software and libraries, reducing the need for manual installation of dependencies.
+- **Efficiency**: Utilizes existing images, reducing the amount of configuration and setup required.
+
+### 2. Using an OS Base Image (like Ubuntu)
+
+- **Flexibility**: Starting with a base OS like Ubuntu gives you full control over what you install, allowing you to add any necessary dependencies and configure the environment from scratch.
+- **Customization**: Ideal for complex applications that need specific versions of libraries, tools, or custom configurations that aren't available in more specialized base images.
+- **Full Environment**: Provides a complete operating system environment, which can be useful if your application relies on a wide range of system utilities or requires complex setup procedures.
+
+### 3. Using a Language Runtime Base Image (like Python):
+
+- **Simplicity**: A language runtime image like `python:3.10-slim` comes with Python pre-installed, which simplifies the Dockerfile and reduces the amount of setup required.
+- **Optimization**: These images are typically optimized for running applications in that particular language, ensuring better performance and reducing unnecessary overhead.
+- **Convenience**: Ideal for applications that primarily depend on the language runtime and its libraries, such as a Django project, as it provides a ready-to-use environment.
+
+### Example:
+
+In the Dockerfile we discussed earlier, the parent image is `python:3.10-slim`:
+
+```
+FROM python:3.10-slim
+```
+
+This line tells Docker to use the `python:3.10-slim` image as the base for your container, which includes Python 3.10 and a minimal set of dependencies.
+
+By starting with a well-defined parent image, you can focus on configuring and building your application environment without having to set up everything from scratch.
+
+### ENV Variables
+
+### 1. **Configuration and Secret Management**
+
+- **API Keys and Secrets**: Environment variables are a secure way to manage sensitive information like API keys, database credentials, and other secrets without hardcoding them into your application.
+- **Configuration Settings**: You can set configuration options that your application needs to run. These might be environment-specific settings such as debug mode, logging levels, or external service URLs.
+
+### Example:
+
+```
+ENV API_KEY=your_api_key_here
+ENV DATABASE_URL=your_database_url_here
+
+```
+
+### 2. **Performance and Behavior Control**
+
+- **Specific Tasks and Settings**: Environment variables can be used to control certain behaviors or settings within your application. For example, preventing Python from creating `.pyc` files with `PYTHONDONTWRITEBYTECODE` or ensuring unbuffered output with `PYTHONUNBUFFERED`.
+
+### Example:
+
+```
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
+
+```
+
+### Benefits:
+
+- **Security**: Keeps sensitive data out of your source code repository.
+- **Flexibility**: Easily change configuration by updating the environment variable value.
+- **Portability**: Ensures your application can be configured correctly across different environments (development, staging, production) by simply setting different environment variable values.
+
+### WORKDIR
+
+The `WORKDIR` instruction in a Dockerfile sets the working directory for any `RUN`, `CMD`, `ENTRYPOINT`, `COPY`, and `ADD` instructions that follow it. This means it changes the directory inside the container where commands are run.
+
+### Purpose of WORKDIR:
+
+- **Define Working Directory**: It specifies the directory inside the container where commands will be executed, making it clear and consistent.
+- **Avoid Repetition**: Instead of specifying the directory each time you run a command, you set it once with `WORKDIR`.
+- **Simplify Paths**: Commands that follow can use relative paths, making the Dockerfile easier to read and maintain.
+
+### Example:
+
+```
+WORKDIR /app
+COPY . /app
+RUN pip install -r requirements.txt
+
+```
+
+Here, the `WORKDIR /app` command sets `/app` as the working directory, so the `COPY` and `RUN` commands that follow are executed within the `/app` directory.
+
+### Common Dockerfile Instructions
+
+- **FROM**: Specifies the base image to use for the Docker image.
+- **WORKDIR**: Sets the working directory for any subsequent instructions.
+- **COPY**: Copies files and directories from the host to the Docker image.
+- **ADD**: Similar to `COPY`, but can also handle remote URLs and extract archives.
+- **RUN**: Executes a command during the image build process.
+- **CMD**: Provides the default command to run when the container starts.
+- **ENTRYPOINT**: Configures a container to run as an executable.
+- **ENV**: Sets environment variables.
+- **EXPOSE**: Informs Docker that the container listens on the specified ports.
+- **VOLUME**: Creates a mount point and marks it as externally mounted.
+- **LABEL**: Adds metadata to an image.
+- **ARG**: Defines build-time variables.
+- **USER**: Specifies the user to use when running the image.
+- **HEALTHCHECK**: Defines a command to test the container's health.
+- **SHELL**: Specifies the shell to use for the shell form of commands.
+
+### COPY
+
+- **Purpose**: Copies files or directories from your host machine into the Docker image.
+- **Syntax**:
+    
+    ```
+    COPY <source_path> <destination_path>
+    ```
+    
+- **Example**:
+This command copies the `requirements.txt` file from the host machine into the `/app/` directory inside the Docker container.
+    
+    ```
+    COPY requirements.txt /app/
+    ```
+    
+
+### RUN
+
+- **Purpose**: Executes a command in the shell during the image build process.
+- **Syntax**:
+    
+    ```
+    RUN <command>
+    ```
+    
+- **Example**:
+This command runs `pip install -r requirements.txt` to install dependencies specified in the `requirements.txt` file.
+    
+    ```
+    RUN pip install -r requirements.txt
+    ```
+    
+
+### CMD
+
+- **Purpose**: Provides the default command to run when the container starts. Unlike `RUN`, `CMD` is executed when a container is started from the Docker image.
+- **Syntax**:
+    
+    ```
+    CMD ["executable", "param1", "param2"]
+    ```
+    
+- **Example**:
+This command runs the Django development server when the container starts.
+    
+    ```
+    CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+    ```
+    
+
+### EXPOSE
+
+- **Purpose**: Informs Docker that the container will listen on the specified network ports at runtime. It doesn't actually publish the port; you need to use the `docker run -p` command to map the container ports to host ports.
+- **Syntax**:
+    
+    ```
+    EXPOSE <port_number>
+    ```
+    
+- **Example**:
+This command indicates that the container listens on port 8000 for connections.
+    
+    ```
+    EXPOSE 8000
+    ```
+    
+
+### ADD
+
+- **Purpose**: Copies files, directories, or remote URLs from the host machine to the Docker image.
+- **Syntax**:
+    
+    ```
+    ADD <source> <destination>
+    ```
+    
+- **Example**:
+    
+    ```
+    ADD config.tar.gz /app/config/
+    ```
+    
+
+### ENV
+
+- **Purpose**: Sets environment variables.
+- **Syntax**:
+    
+    ```
+    ENV <key> <value>
+    ```
+    
+- **Example**:
+    
+    ```
+    ENV NODE_ENV=production
+    ```
+    
+
+### ENTRYPOINT
+
+- **Purpose**: Configures a container that will run as an executable.
+- **Syntax**:
+    
+    ```
+    ENTRYPOINT ["executable", "param1", "param2"]
+    ```
+    
+- **Example**:
+    
+    ```
+    ENTRYPOINT ["python", "app.py"]
+    ```
+    
+
+### VOLUME
+
+- **Purpose**: Creates a mount point with the specified path and marks it as holding externally mounted volumes from the host or other containers.
+- **Syntax**:
+    
+    ```
+    VOLUME ["<path>"]
+    ```
+    
+- **Example**:
+    
+    ```
+    VOLUME ["/data"]
+    ```
+    
+
+### ARG
+
+- **Purpose**: Defines a variable that users can pass at build-time to the builder with the `docker build` command.
+- **Syntax**:
+    
+    ```
+    ARG <name>[=<default_value>]
+    ```
+    
+- **Example**:
+    
+    ```
+    ARG APP_VERSION=1.0.0
+    ```
+    
+
+### USER
+
+- **Purpose**: Specifies the user name or UID to use when running the image and for any `RUN`, `CMD`, and `ENTRYPOINT` instructions that follow it.
+- **Syntax**:
+    
+    ```
+    USER <username|uid>
+    ```
+    
+- **Example**:
+    
+    ```
+    USER appuser
+    ```
+    
+
+### LABEL
+
+- **Purpose**: Adds metadata to an image. A label is a key-value pair.
+- **Syntax**:
+    
+    ```
+    LABEL <key>=<value> ...
+    ```
+    
+- **Example**:
+    
+    ```
+    LABEL version="1.0"
+    LABEL description="This is my project"
+    ```
+    
+
+### HEALTHCHECK
+
+- **Purpose**: Tells Docker how to test the container to check that it is still working.
+- **Syntax**:
+    
+    ```
+    HEALTHCHECK [OPTIONS] CMD <command> [args...]
+    ```
+    
+- **Example**:
+    
+    ```
+    HEALTHCHECK --interval=5m --timeout=3s \\
+      CMD curl -f <http://localhost/> || exit 1
+    ```
+    
+
+### SHELL
+
+- **Purpose**: Allows the default shell used for the shell form of commands to be overridden.
+- **Syntax**:
+    
+    ```
+    SHELL ["executable", "parameters"]
+    ```
+    
+- **Example**:
+  ```
+  SHELL ["/bin/bash", "-c"]
+  ```
