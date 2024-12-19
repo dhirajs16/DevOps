@@ -1,0 +1,18 @@
+{
+    "myapp": {
+        "services": "CI_CD_project",
+        "test1": "script1",
+        "test2": "script2",
+        "simple_array": [1, 2, 3, 4, 5],
+        "arr_of_objects": [
+            {
+                "key1": "value1",
+                "random1": "randomvalue1"
+            },
+            {
+                "key2": "value2",
+                "random2": "randomvalue2"
+            }
+        ]
+    }
+}
