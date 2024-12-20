@@ -15,3 +15,39 @@ myapp:
     hello there
     I am Dhiraj
     I am BIT Student
+
+
+# steps to write your github action
+
+# step 1: first thing you want to write in your github action is name use "name" key
+
+name: My first github action
+
+# step 2: second thing you want to write when these action should run. use "on" key. What the
+#         trigger is? Here it is "push".  
+
+on: [push]
+
+# step 3: state the set of tasks/jobs you want to in this action when the (above example: push) 
+#         is triggered
+
+jobs:
+  print-hello-world:
+    run-on: ubuntu-latest
+    steps:
+      - echo "hello world"
+      - echo "this is step 2"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
