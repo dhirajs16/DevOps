@@ -33,10 +33,12 @@ on: [push]
 
 jobs:
   print-hello-world:
-    run-on: ubuntu-latest
+    runs-on: ubuntu-latest
     steps:
-      - echo "hello world"
-      - echo "this is step 2"
+      - name: Print Hello World
+        run: echo "hello world"
+      - name: Print Step 2
+        run: echo "this is step 2"
 
 
 
