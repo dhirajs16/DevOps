@@ -5,8 +5,6 @@ on:
       - main
 
 jobs:
-# github executes these jobs in parallel since there are objects (print-hello-world & print-hello-world2)
-# not list
   print-hello-world:
     runs-on: ubuntu-latest
     steps:

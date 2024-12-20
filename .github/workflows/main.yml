@@ -2,7 +2,7 @@ name: test action
 on:
   push:
     branches:
-      - main
+      - secondary
 
 jobs:
   print-hello-world:

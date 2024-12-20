@@ -35,6 +35,8 @@ on:
 #         is triggered
 
 jobs:
+# github executes these jobs in parallel since there are objects (print-hello-world & print-hello-world2)
+# not list
   print-hello-world:
     runs-on: ubuntu-latest
     steps:
@@ -42,6 +44,20 @@ jobs:
         run: echo "hello world"
       - name: Print Step 2
         run: echo "this is step 2"
+  print-hello-world2:
+    runs-on: ubuntu-latest
+    steps:
+      - name: print hello world2
+        run: echo "hello world2"
+      - name: print step2
+        run: echo "step 2"
+
+"""
+For GitHub Actions to execute, the .yml workflow files must be placed in 
+the .github/workflows directory at the root level of your repository. 
+This specific directory structure is required by GitHub to recognize and run the workflow files.
+
+""" 
 
 
 
