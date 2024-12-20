@@ -5,10 +5,20 @@ on:
       - main
 
 jobs:
+# github executes these jobs in parallel since there are objects (print-hello-world & print-hello-world2)
+# not list
   print-hello-world:
     runs-on: ubuntu-latest
     steps:
       - name: print hello world
         run: echo "hello world"
+      - name: print step2
+        run: echo "step 2"
+
+  print-hello-world2:
+    runs-on: ubuntu-latest
+    steps:
+      - name: print hello world2
+        run: echo "hello world2"
       - name: print step2
         run: echo "step 2"
