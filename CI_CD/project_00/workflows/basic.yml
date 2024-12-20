@@ -26,7 +26,10 @@ name: My first github action
 # step 2: second thing you want to write when these action should run. use "on" key. What the
 #         trigger is? Here it is "push".  
 
-on: [push]
+on: 
+  push:
+    branches:
+      - secondary
 
 # step 3: state the set of tasks/jobs you want to in this action when the (above example: push) 
 #         is triggered
